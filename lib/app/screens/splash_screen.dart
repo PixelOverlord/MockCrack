@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockcrack/app/screens/auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,6 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
             GestureDetector(
               onTap: () {
                 // Add button functionality here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AuthScreen()),
+                );
               },
               child: Container(
                 width: mq.width * 0.9,

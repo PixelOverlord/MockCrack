@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mockcrack/application/screens/splash_screen.dart';
+import 'package:mockcrack/app/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData.light(useMaterial3: true),
       home: SplashScreen(),
     );
   }
