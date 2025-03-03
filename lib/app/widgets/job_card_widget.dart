@@ -10,7 +10,7 @@ Widget jobCard(BuildContext context, JobCardItem job) {
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
           color: Color(0xffc2c2c2),
           spreadRadius: 1,
@@ -26,9 +26,9 @@ Widget jobCard(BuildContext context, JobCardItem job) {
             width: mq.height * 0.09,
             margin: EdgeInsets.all(mq.height * 0.01),
             decoration: BoxDecoration(
-              color: Color(0xfff4f3f1),
+              color: const Color(0xfff4f3f1),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Color(0xffc2c2c2),
                   spreadRadius: 1,
@@ -55,7 +55,7 @@ Widget jobCard(BuildContext context, JobCardItem job) {
               children: [
                 Text(
                   job.jobRole,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -86,7 +86,7 @@ Widget jobCard(BuildContext context, JobCardItem job) {
                     ),
                   ],
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Row(
                   children: [
                     Icon(Icons.location_on, color: Colors.grey[700]),

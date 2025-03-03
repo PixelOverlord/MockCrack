@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockcrack/app/screens/interview_description.dart';
 import 'package:mockcrack/app/widgets/job_card_widget.dart';
 
 import '../widgets/app_instruction_widgets.dart';
@@ -42,11 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final mq = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color(0xfff4f3f1),
+      backgroundColor: const Color(0xfff4f3f1),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -54,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Row(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 35,
                         backgroundImage: NetworkImage(
                           'https://img.freepik.com/premium-photo/3d-close-up-portrait-smiling-man_175690-201.jpg?w=740',
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Jhon Doe',
                             style: TextStyle(
                               fontSize: 20,
@@ -85,13 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Container(
                   width: 90,
-                  margin: EdgeInsets.only(right: 16),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(right: 16),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Color(0xff777765),
+                    color: const Color(0xff777765),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Icon(Icons.star, color: Colors.white),
@@ -113,8 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               height: mq.height * 0.45,
               width: double.infinity,
-              margin: EdgeInsets.all(16),
-              padding: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
@@ -122,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Prep from Real Job Postings',
                     style: TextStyle(
                       fontSize: 18,
@@ -137,14 +138,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       appInstructionCard(
-                        icon: Icon(Icons.phone_android,
+                        icon: const Icon(Icons.phone_android,
                             color: Colors.blue, size: 30),
                         description: 'Browse Jobs from Various Job Postings',
                       ),
                       Column(
                         children: [
-                          SizedBox(height: 40),
-                          Container(
+                          const SizedBox(height: 40),
+                          SizedBox(
                             height: 2,
                             width: 50,
                             child: CustomPaint(
@@ -154,14 +155,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       appInstructionCard(
-                        icon: Icon(Icons.share, color: Colors.blue, size: 30),
+                        icon: const Icon(Icons.share,
+                            color: Colors.blue, size: 30),
                         description:
                             'Share the Job Description and write it down there',
                       ),
                       Column(
                         children: [
-                          SizedBox(height: 40),
-                          Container(
+                          const SizedBox(height: 40),
+                          SizedBox(
                             height: 2,
                             width: 50,
                             child: CustomPaint(
@@ -183,12 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   // generate button
-                  Column(
+                  const Column(
                     children: [
                       // text field
                     ],
                   ),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 1,
                     child: CustomPaint(
@@ -203,12 +205,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         height: mq.height * 0.07,
                         width: double.infinity,
-                        margin: EdgeInsets.all(10),
-                        padding: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color(0xffc2c2c2),
                               spreadRadius: 1,
@@ -217,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         child: TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Paste Job Description',
                             hintStyle: TextStyle(
@@ -232,9 +234,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         height: mq.height * 0.07,
                         width: double.infinity,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Color(0xff062f29),
+                          color: const Color(0xff062f29),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -244,9 +246,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'https://cdn-icons-png.flaticon.com/512/3324/3324855.png',
                                 height: 25,
                                 width: 25,
-                                color: Color(0xffb1d580)),
-                            SizedBox(width: 10),
-                            Text(
+                                color: const Color(0xffb1d580)),
+                            const SizedBox(width: 10),
+                            const Text(
                               'Generate Interview',
                               style: TextStyle(
                                   fontSize: 16,
@@ -266,8 +268,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(22),
@@ -276,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Frictious Job Posts for Prep',
                     style: TextStyle(
                       fontSize: 18,
@@ -284,13 +286,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: jobList.length,
                     itemBuilder: (context, index) {
-                      return jobCard(context, jobList[index]);
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => InterviewDescription(
+                                          item: jobList[index],
+                                        )));
+                          },
+                          child: jobCard(context, jobList[index]));
                     },
                   )
                 ],

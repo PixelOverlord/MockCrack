@@ -16,7 +16,7 @@ Widget authTile({
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
           color: Color(0xffc2c2c2),
           spreadRadius: 1,
@@ -42,7 +42,7 @@ Widget authTile({
               label: Text(label),
               hintText: hintText,
             ),
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         ),
       ],

@@ -3,8 +3,10 @@ import 'package:mockcrack/app/screens/home_screen.dart';
 import 'package:mockcrack/app/widgets/auth_tile_widget.dart';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+
   @override
-  _AuthScreenState createState() => _AuthScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
@@ -18,11 +20,12 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // TODO: Implement account creation logic
+
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
+      // ignore: avoid_print
       print(
           'Account created with: {${_usernameController.text}, ${_fullNameController.text}, ${_emailController.text}, ${_designationController.text} , ${_passwordController.text}}');
     }
@@ -36,7 +39,7 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.green,
           ),
@@ -45,7 +48,7 @@ class _AuthScreenState extends State<AuthScreen> {
           },
         ),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Create Account',
           style: TextStyle(
             color: Colors.green,
@@ -54,11 +57,11 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -106,7 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Color(0xffc2c2c2),
                             spreadRadius: 1,
@@ -116,8 +119,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(14.0),
+                          const Padding(
+                            padding: EdgeInsets.all(14.0),
                             child: Icon(
                               Icons.password,
                               color: Colors.green,
@@ -126,17 +129,17 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           Expanded(
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 label: Text("Password"),
                                 hintText: "eg. Pass123",
                               ),
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                               controller: _passwordController,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(14.0),
+                          const Padding(
+                            padding: EdgeInsets.all(14.0),
                             child: Icon(
                               Icons.visibility_off,
                               color: Colors.green,
@@ -160,7 +163,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: TextButton(
-                    child: Text(
+                    onPressed: _submitForm,
+                    child: const Text(
                       "Create Account",
                       style: TextStyle(
                         color: Colors.white,
@@ -168,7 +172,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed: _submitForm,
                   ),
                 )
               ],

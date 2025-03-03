@@ -4,19 +4,19 @@ Widget appInstructionCard({
   required Widget icon,
   required String description,
 }) {
-  return Container(
+  return SizedBox(
     width: 80,
     child: Column(
       children: [
         CircleAvatar(
           radius: 35,
-          backgroundColor: Color(0xffdafc94),
+          backgroundColor: const Color(0xffdafc94),
           child: icon,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           description,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.bold,
             color: Colors.black,

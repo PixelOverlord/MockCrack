@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 // Add button functionality here
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AuthScreen()),
+                  MaterialPageRoute(builder: (context) => const AuthScreen()),
                 );
               },
               child: Container(
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'Get Started',
                     style: TextStyle(

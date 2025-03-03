@@ -40,6 +40,9 @@ dependencies:
   flutter_markdown: ^0.6.18
   lottie: ^2.7.0
   equatable: ^2.0.5
+  google_nav_bar: ^5.0.7
+  camera: ^0.10.5+9
+  permission_handler: ^11.2.1
 
 dev_dependencies:
   flutter_test:
@@ -67,3 +70,11 @@ flutter:
   assets:
     - assets/animations/
     - assets/images/
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          style: italic
