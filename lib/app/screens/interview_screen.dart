@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
+import 'package:mockcrack/app/screens/results_screen.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
 class InterviewScreen extends StatefulWidget {
@@ -244,49 +245,69 @@ class _InterviewScreenState extends State<InterviewScreen> {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      height: mq.height * 0.07,
-                      margin: EdgeInsets.all(mq.height * 0.01),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Pause",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Icon(Icons.pause, color: Colors.white, size: 30),
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        // stop timer
+
+                        setState(() {
+                          if (!isPaused) {
+                            isPaused = true;
+                          } else {
+                            isPaused = false;
+                          }
+                        });
+                      },
+                      child: Container(
+                        height: mq.height * 0.07,
+                        margin: EdgeInsets.all(mq.height * 0.01),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              isPaused ? "Resume" : "Pause",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Icon(isPaused ? Icons.play_arrow : Icons.pause,
+                                color: Colors.white, size: 30),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      height: mq.height * 0.07,
-                      margin: EdgeInsets.all(mq.height * 0.01),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "End",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Icon(Icons.power_settings_new,
-                              color: Colors.white, size: 30),
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => ResultsScreen()));
+                      },
+                      child: Container(
+                        height: mq.height * 0.07,
+                        margin: EdgeInsets.all(mq.height * 0.01),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "End",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Icon(Icons.power_settings_new,
+                                color: Colors.white, size: 30),
+                          ],
+                        ),
                       ),
                     ),
                   ),
