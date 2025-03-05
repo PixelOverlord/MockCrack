@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:mockcrack/app/screens/home_screen.dart';
+import 'package:mockcrack/app/screens/custom_interview_screen.dart';
+import 'package:mockcrack/app/screens/interview_history_screen.dart';
+import 'package:mockcrack/app/screens/user_profile_screen.dart';
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
@@ -12,6 +15,9 @@ class AppScreen extends StatefulWidget {
 class _AppScreenState extends State<AppScreen> {
   List<Widget> screens = [
     const HomeScreen(),
+    const CustomInterviewScreen(),
+    const InterviewHistoryScreen(),
+    const UserProfileScreen(),
   ];
 
   int currentIdx = 0;
@@ -21,25 +27,28 @@ class _AppScreenState extends State<AppScreen> {
     return Scaffold(
       body: screens[currentIdx],
       bottomNavigationBar: Container(
-        color: const Color(0xff062f29),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
-        child: GNav(
-          backgroundColor: const Color(0xff062f29),
-          color: Colors.white,
-          activeColor: const Color(0xffb1d580),
-          tabBackgroundColor: Colors.green.shade800,
-          gap: 8,
-          padding: const EdgeInsets.all(12),
-          onTabChange: (index) {
-            // ignore: avoid_print
-            print(index);
-          },
-          tabs: const [
-            GButton(icon: Icons.home, text: 'Home'),
-            GButton(icon: Icons.add_to_photos_rounded, text: 'Create'),
-            GButton(icon: Icons.bookmark, text: 'Preps'),
-            GButton(icon: Icons.person, text: 'Profile'),
-          ],
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+          child: GNav(
+            backgroundColor: Colors.white,
+            color: Colors.grey[400]!,
+            activeColor: const Color(0xff062f29),
+            tabBackgroundColor: const Color(0xff062f29).withOpacity(0.1),
+            gap: 8,
+            padding: const EdgeInsets.all(16),
+            onTabChange: (index) {
+              setState(() {
+                currentIdx = index;
+              });
+            },
+            tabs: const [
+              GButton(icon: Icons.home, text: 'Home'),
+              GButton(icon: Icons.add_circle_outline, text: 'Custom'),
+              GButton(icon: Icons.history, text: 'History'),
+              GButton(icon: Icons.person_outline, text: 'Profile'),
+            ],
+          ),
         ),
       ),
     );
