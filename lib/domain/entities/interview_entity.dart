@@ -12,7 +12,7 @@ class InterviewEntity extends Equatable {
   final DateTime duration;
   final DateTime createdAt;
 
-  InterviewEntity({
+  const InterviewEntity({
     required this.interviewId,
     required this.userId,
     required this.role,
