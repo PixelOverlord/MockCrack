@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mockcrack/app/screens/interview_description.dart';
 import 'package:mockcrack/app/widgets/job_card_widget.dart';
+import 'package:mockcrack/domain/entities/users_entity.dart';
 
 import '../widgets/app_instruction_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final UserEntity user;
+  const HomeScreen({super.key, required this.user});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

@@ -1,24 +1,24 @@
 import 'package:mockcrack/domain/entities/users_entity.dart';
 
 class UserModel extends UserEntity {
-  final String uid;
-  final String email;
-  final String username;
-  final String occupation;
-  final List<String> interviews;
-  final num score;
-  final List<String> techStack;
-  final List<String> preferences;
+  final String? uid;
+  final String? email;
+  final String? username;
+  final String? occupation;
+  final List? interviews;
+  final num? score;
+  final List? techStack;
+  final List? preferences;
 
   const UserModel({
-    required this.uid,
-    required this.email,
-    required this.username,
-    required this.occupation,
-    required this.interviews,
-    required this.score,
-    required this.techStack,
-    required this.preferences,
+    this.uid,
+    this.email,
+    this.username,
+    this.occupation,
+    this.interviews,
+    this.score,
+    this.techStack,
+    this.preferences,
   }) : super(
           uid: uid,
           email: email,

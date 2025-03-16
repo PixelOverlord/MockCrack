@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mockcrack/domain/entities/users_entity.dart';
+
 import 'package:mockcrack/domain/usecases/auth/get_current_user_usecase.dart';
 import 'package:mockcrack/domain/usecases/auth/get_user_stream_usecase.dart';
 import 'package:mockcrack/domain/usecases/auth/update_user_interviews_usecase.dart';
@@ -32,12 +33,11 @@ class UserCubit extends Cubit<UserState> {
     required this.getCurrentUidUseCase,
   }) : super(UserInitial());
 
-  Future<void> getUser({required UserEntity user}) async {
+  Future<void> getUser({required String uid}) async {
     emit(UserLoading());
 
     try {
-      final uid = await getCurrentUidUseCase.call();
-      final streamRes = getUserStreamUseCase.call(uid!);
+      final streamRes = getUserStreamUseCase.call(uid);
 
       streamRes.listen((users) => emit(UserLoaded(user: users!)));
     } on SocketException catch (e) {

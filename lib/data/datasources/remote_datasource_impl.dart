@@ -53,12 +53,12 @@ class RemoteDatasourceImpl implements RemoteDataSource {
     userCollection.doc(uid).get().then((newDoc) {
       final newUser = UserModel(
         uid: uid!,
-        email: user.email,
-        username: user.username,
-        occupation: user.occupation,
-        interviews: user.interviews,
-        score: user.score,
-        techStack: user.techStack,
+        email: user.email!,
+        username: user.username!,
+        occupation: user.occupation!,
+        interviews: user.interviews!,
+        score: user.score!,
+        techStack: user.techStack!,
         preferences: user.preferences,
       ).toMap();
 
@@ -74,14 +74,21 @@ class RemoteDatasourceImpl implements RemoteDataSource {
 
   /// Signs up user with the given email and password.
   @override
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password, UserEntity user) async {
     try {
       // signup user
 
       // create a new user and get uid
       if (email.isNotEmpty && password.isNotEmpty) {
-        await auth.createUserWithEmailAndPassword(
-            email: email, password: password);
+        await auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((val) async {
+          if (val.user?.uid != null) {
+            await createUser(user);
+
+            print("Account Creation Successfull");
+          }
+        });
       }
 
       // return void

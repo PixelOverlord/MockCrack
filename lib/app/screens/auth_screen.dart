@@ -1,6 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mockcrack/app/cubits/creds/creds_cubit.dart';
+import 'package:mockcrack/app/cubits/user/user_cubit.dart';
+import 'package:mockcrack/app/screens/app_screen.dart';
 import 'package:mockcrack/app/screens/home_screen.dart';
 import 'package:mockcrack/app/widgets/auth_tile_widget.dart';
+import 'package:mockcrack/domain/entities/users_entity.dart';
+import 'package:mockcrack/utils/custom_snackbar.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -21,15 +28,44 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
-      // ignore: avoid_print
-      print(
-          'Account created with: {${_usernameController.text}, ${_fullNameController.text}, ${_emailController.text}, ${_designationController.text} , ${_passwordController.text}}');
+      if (isLogin) {
+        print("login pressed");
+        signInUser();
+      } else {
+        print("signup pressed");
+
+        signUpUser();
+      }
     }
   }
+
+  void signUpUser() async {
+    BlocProvider.of<CredsCubit>(context)
+        .signUp(
+      email: _emailController.text,
+      password: _passwordController.text,
+      user: UserEntity(
+        email: _emailController.text,
+        username: _usernameController.text,
+        occupation: _designationController.text,
+        techStack: [],
+        preferences: [],
+        interviews: [],
+      ),
+    )
+        .then((_) {
+      successBar(context, 'Account Created Successfully');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AppScreen(uid: FirebaseAuth.instance.currentUser!.uid)),
+      );
+    });
+  }
+
+  void signInUser() {}
+  bool isLogin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +84,8 @@ class _AuthScreenState extends State<AuthScreen> {
           },
         ),
         centerTitle: true,
-        title: const Text(
-          'Create Account',
+        title: Text(
+          isLogin ? 'Login' : 'Create Account',
           style: TextStyle(
             color: Colors.green,
             fontWeight: FontWeight.w600,
@@ -74,20 +110,22 @@ class _AuthScreenState extends State<AuthScreen> {
                 // forms
                 Column(
                   children: [
-                    authTile(
-                      label: "Username",
-                      hintText: "eg. Jhon06",
-                      icon: Icons.person,
-                      ctx: context,
-                      controller: _usernameController,
-                    ),
-                    authTile(
-                      label: "Full Name",
-                      hintText: "eg. Jhon Doe",
-                      icon: Icons.person_outline,
-                      ctx: context,
-                      controller: _fullNameController,
-                    ),
+                    if (!isLogin)
+                      authTile(
+                        label: "Username",
+                        hintText: "eg. Jhon06",
+                        icon: Icons.person,
+                        ctx: context,
+                        controller: _usernameController,
+                      ),
+                    if (!isLogin)
+                      authTile(
+                        label: "Full Name",
+                        hintText: "eg. Jhon Doe",
+                        icon: Icons.person_outline,
+                        ctx: context,
+                        controller: _fullNameController,
+                      ),
                     authTile(
                       label: "Email",
                       hintText: "eg. Jhon@example.com",
@@ -95,13 +133,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       ctx: context,
                       controller: _emailController,
                     ),
-                    authTile(
-                      label: "Designation",
-                      hintText: "eg. Software Engineer",
-                      icon: Icons.work,
-                      ctx: context,
-                      controller: _designationController,
-                    ),
+                    if (!isLogin)
+                      authTile(
+                        label: "Designation",
+                        hintText: "eg. Software Engineer",
+                        icon: Icons.work,
+                        ctx: context,
+                        controller: _designationController,
+                      ),
                     Container(
                       height: mq.height * 0.07,
                       width: double.infinity,
@@ -154,26 +193,55 @@ class _AuthScreenState extends State<AuthScreen> {
                 SizedBox(height: mq.height * 0.03),
                 // button
 
-                Container(
-                  height: mq.height * 0.07,
-                  width: double.infinity,
-                  margin: EdgeInsets.only(bottom: mq.height * 0.01),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: TextButton(
-                    onPressed: _submitForm,
-                    child: const Text(
-                      "Create Account",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: _submitForm,
+                  child: Container(
+                    height: mq.height * 0.07,
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: mq.height * 0.01),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Center(
+                      child: Text(
+                        isLogin ? "Login" : "Create Account",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
-                )
+                ),
+
+                SizedBox(height: mq.height * 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      isLogin
+                          ? "Don't Have an Account ? "
+                          : "Already Have an Account ? ",
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          isLogin = !isLogin;
+                        });
+                      },
+                      child: Text(
+                        !isLogin ? "Login" : "Create Account",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

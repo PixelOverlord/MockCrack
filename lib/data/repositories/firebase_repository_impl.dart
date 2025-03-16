@@ -22,8 +22,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   Future<void> signOut() => remoteDataSource.signOut();
 
   @override
-  Future<void> signUp(String email, String password) =>
-      remoteDataSource.signUp(email, password);
+  Future<void> signUp(String email, String password, UserEntity user) =>
+      remoteDataSource.signUp(email, password, user);
 
   @override
   Future<void> updateUserInterviews(String uid, List<String> interviews) =>

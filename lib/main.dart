@@ -1,7 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mockcrack/app/cubits/auth/auth_cubit.dart';
+import 'package:mockcrack/app/cubits/creds/creds_cubit.dart';
+import 'package:mockcrack/app/cubits/user/user_cubit.dart';
 import 'package:mockcrack/app/screens/app_screen.dart';
+import 'package:mockcrack/app/screens/splash_screen.dart';
+import 'package:mockcrack/firebase_options.dart';
+import 'dependency_injection.dart' as di;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await di.init();
+
   runApp(const MyApp());
 }
 
@@ -10,13 +26,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Montserrat',
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<AuthCubit>()..appStarted()),
+        BlocProvider(create: (_) => di.sl<UserCubit>()),
+        BlocProvider(create: (_) => di.sl<CredsCubit>()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Montserrat',
+          useMaterial3: true,
+        ),
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthError) {
+              return Text(state.message);
+            } else if (state is Authenticated) {
+              return AppScreen(
+                uid: state.uid,
+              );
+            } else if (state is Unauthenticated) {
+              return SplashScreen();
+            }
+
+            return SizedBox();
+          },
+        ),
       ),
-      home: AppScreen(),
     );
   }
 }

@@ -3,7 +3,7 @@ import '../../domain/entities/users_entity.dart';
 abstract class RemoteDataSource {
   // Authentication methods
   Future<void> signIn(String email, String password);
-  Future<void> signUp(String email, String password);
+  Future<void> signUp(String email, String password, UserEntity user);
   Future<void> signOut();
   Future<bool> isSignedIn();
   Future<void> createUser(UserEntity user);

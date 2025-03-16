@@ -13,6 +13,8 @@ import 'package:mockcrack/domain/usecases/auth/sign_up_usecase.dart';
 import 'package:mockcrack/domain/usecases/auth/update_user_interviews_usecase.dart';
 import 'package:mockcrack/domain/usecases/auth/update_user_preferences_usecase.dart';
 
+import 'app/cubits/auth/auth_cubit.dart';
+import 'app/cubits/creds/creds_cubit.dart';
 import 'data/datasources/remote_datasource.dart';
 import 'domain/usecases/auth/get_user_stream_usecase.dart';
 import 'domain/usecases/auth/update_user_profile_usecase.dart';
@@ -33,6 +35,21 @@ Future<void> init() async {
       updateUserScoreUseCase: sl.call(),
       updateUserTechStackUseCase: sl.call(),
       getCurrentUidUseCase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => CredsCubit(
+      signInUseCase: sl.call(),
+      signUpUseCase: sl.call(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => AuthCubit(
+      getSignedInStatusUseCase: sl.call(),
+      getCurrentUidUseCase: sl.call(),
+      signOutUseCase: sl.call(),
     ),
   );
 

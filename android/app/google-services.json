@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "521244528275",
+    "project_id": "mockcrack",
+    "storage_bucket": "mockcrack.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521244528275:android:1e851f29e6ac1740498766",
+        "android_client_info": {
+          "package_name": "com.example.mockcrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-_lUik_3UrIhUzuX3Cqn8M0Kjd02uFn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

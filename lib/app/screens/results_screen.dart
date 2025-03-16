@@ -224,8 +224,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => AppScreen()));
+                  // Navigator.push(
+                  //     context, MaterialPageRoute(builder: (_) => AppScreen()));
                 },
                 child: Text('Back to Home'))
           ],
