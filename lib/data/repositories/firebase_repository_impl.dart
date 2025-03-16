@@ -9,19 +9,21 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   FirebaseRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<UserEntity?> getCurrentUser() => remoteDataSource.getCurrentUser();
+  Future<String?> getCurrentUid() => remoteDataSource.getCurrentUid();
 
   @override
   Future<bool> isSignedIn() => remoteDataSource.isSignedIn();
 
   @override
-  Future<void> signIn(UserEntity user) => remoteDataSource.signIn(user);
+  Future<void> signIn(String email, String password) =>
+      remoteDataSource.signIn(email, password);
 
   @override
   Future<void> signOut() => remoteDataSource.signOut();
 
   @override
-  Future<void> signUp(UserEntity user) => remoteDataSource.signUp(user);
+  Future<void> signUp(String email, String password) =>
+      remoteDataSource.signUp(email, password);
 
   @override
   Future<void> updateUserInterviews(String uid, List<String> interviews) =>
@@ -44,5 +46,9 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
       remoteDataSource.updateUserTechStack(uid, techStack);
 
   @override
-  Stream<UserEntity?> get userStream => remoteDataSource.userStream;
+  Stream<UserEntity?> getuserStream(String uid) =>
+      remoteDataSource.getuserStream(uid);
+
+  @override
+  Future<void> createUser(UserEntity user) => remoteDataSource.createUser(user);
 }

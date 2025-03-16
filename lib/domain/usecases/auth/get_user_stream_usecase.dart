@@ -6,7 +6,7 @@ class GetUserStreamUseCase {
 
   GetUserStreamUseCase(this.repository);
 
-  Stream<UserEntity?> call() {
-    return repository.userStream;
+  Stream<UserEntity?> call(String uid) {
+    return repository.getuserStream(uid);
   }
 }

@@ -2,13 +2,14 @@ import '../../domain/entities/users_entity.dart';
 
 abstract class RemoteDataSource {
   // Authentication methods
-  Future<void> signIn(UserEntity user);
-  Future<void> signUp(UserEntity user);
+  Future<void> signIn(String email, String password);
+  Future<void> signUp(String email, String password);
   Future<void> signOut();
   Future<bool> isSignedIn();
+  Future<void> createUser(UserEntity user);
 
-  Future<UserEntity?> getCurrentUser();
-  Stream<UserEntity?> get userStream;
+  Future<String?> getCurrentUid();
+  Stream<UserEntity?> getuserStream(String uid);
 
   // User data methods
   Future<void> updateUserProfile(UserEntity user);

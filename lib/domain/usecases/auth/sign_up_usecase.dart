@@ -6,7 +6,7 @@ class SignUpUseCase {
 
   SignUpUseCase(this.repository);
 
-  Future<void> call(UserEntity user) async {
-    return await repository.signUp(user);
+  Future<void> call(String email, String password) async {
+    return await repository.signUp(email, password);
   }
 }

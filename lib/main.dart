@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Montserrat',
         useMaterial3: true,
       ),
-      home: const AppScreen(),
+      home: AppScreen(),
     );
   }
 }

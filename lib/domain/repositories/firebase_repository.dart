@@ -3,13 +3,14 @@ import '../entities/users_entity.dart';
 
 abstract class FirebaseRepository {
   // Authentication methods
-  Future<void> signIn(UserEntity user);
-  Future<void> signUp(UserEntity user);
+  Future<void> signIn(String email, String password);
+  Future<void> signUp(String email, String password);
+  Future<void> createUser(UserEntity user);
   Future<void> signOut();
   Future<bool> isSignedIn();
 
-  Future<UserEntity?> getCurrentUser();
-  Stream<UserEntity?> get userStream;
+  Future<String?> getCurrentUid();
+  Stream<UserEntity?> getuserStream(String uid);
 
   Future<void> updateUserProfile(UserEntity user);
   Future<void> updateUserScore(String uid, num newScore);
