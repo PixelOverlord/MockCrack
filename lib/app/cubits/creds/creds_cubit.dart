@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mockcrack/domain/entities/users_entity.dart';
 import 'package:mockcrack/domain/usecases/auth/sign_in_usecase.dart';
 import 'package:mockcrack/domain/usecases/auth/sign_out_usecase.dart';
@@ -34,8 +37,14 @@ class CredsCubit extends Cubit<CredsState> {
     try {
       await signUpUseCase.call(email, password, user);
       emit(CredsLoaded());
-    } catch (e) {
-      emit(CredsError(message: e.toString()));
+    } on SocketException {
+      emit(const CredsError(message: 'No Internet Connection'));
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'email-already-in-use') {
+        emit(const CredsError(message: 'User Already Exist'));
+      } else if (err.code == 'weak-password') {
+        emit(const CredsError(message: 'Password is Weak'));
+      }
     }
   }
 }

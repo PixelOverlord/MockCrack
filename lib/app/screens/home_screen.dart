@@ -66,8 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Jhon Doe',
+                          Text(
+                            widget.user.username!,
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            'Software Engineer',
+                            widget.user.occupation!,
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[700],

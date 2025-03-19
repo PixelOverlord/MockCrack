@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mockcrack/app/screens/generating_interview_screen.dart';
 import 'package:mockcrack/app/screens/interview_screen.dart';
+import 'package:mockcrack/services/api_service.dart';
 import 'package:mockcrack/utils/colors.dart';
 
 class CustomInterviewScreen extends StatefulWidget {
@@ -66,22 +68,28 @@ class _CustomInterviewScreenState extends State<CustomInterviewScreen> {
   String? selectedRole;
   String? selectedLevel;
   final TextEditingController _techStackController = TextEditingController();
-  final List<String> techStacks = []; // List to store tech stack entries
-
+  List<String> techStacks = []; // List to store tech stack entries
+  // List<String> temp = [];
+  bool generating = false;
   @override
   void dispose() {
     _techStackController.dispose();
     super.dispose();
   }
 
-  void _onGenerateInterview() {
+  void _onGenerateInterview() async {
     if (selectedRole != null &&
         selectedLevel != null &&
         techStacks.isNotEmpty) {
+      print("pressed");
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const InterviewScreen(),
+          builder: (context) => GeneratingInterviewScreen(
+            role: selectedRole!,
+            experience: selectedLevel!,
+            techStacks: techStacks,
+          ),
         ),
       );
     }
@@ -263,33 +271,36 @@ class _CustomInterviewScreenState extends State<CustomInterviewScreen> {
               ),
 
               // Generate Interview Button
-              Container(
-                height: mq.height * 0.07,
-                width: double.infinity,
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xff062f29),
-                  borderRadius: BorderRadius.circular(8),
+              GestureDetector(
+                onTap: _onGenerateInterview,
+                child: Container(
+                  height: mq.height * 0.07,
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff062f29),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                          'https://cdn-icons-png.flaticon.com/512/3324/3324855.png',
+                          height: 25,
+                          width: 25,
+                          color: const Color(0xffb1d580)),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Generate Interview',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xffb1d580)),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                        'https://cdn-icons-png.flaticon.com/512/3324/3324855.png',
-                        height: 25,
-                        width: 25,
-                        color: const Color(0xffb1d580)),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Generate Interview',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xffb1d580)),
-                    ),
-                  ],
-                ),
-              )
+              ),
             ],
           ),
         ),

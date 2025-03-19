@@ -189,7 +189,9 @@ class _InterviewDescriptionState extends State<InterviewDescription> {
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (ctx) => InterviewScreen()));
+                          builder: (ctx) => InterviewScreen(
+                                questions: [],
+                              )));
                     },
                     child: Container(
                       height: mq.height * 0.07,

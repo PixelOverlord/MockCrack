@@ -5,7 +5,10 @@ import 'package:mockcrack/app/screens/interview_screen.dart';
 import '../../utils/colors.dart';
 
 class ResultsScreen extends StatefulWidget {
-  const ResultsScreen({super.key});
+  final List<String> questions;
+  final List<int> scores;
+  const ResultsScreen(
+      {super.key, required this.questions, required this.scores});
 
   @override
   State<ResultsScreen> createState() => _ResultsScreenState();
@@ -13,6 +16,15 @@ class ResultsScreen extends StatefulWidget {
 
 class _ResultsScreenState extends State<ResultsScreen> {
   int selectedIndex = 0;
+
+  int getAvgScore(List<int> scores) {
+    if (scores.isEmpty) return 0;
+    int sum = 0;
+    for (final score in scores) {
+      sum += score;
+    }
+    return sum ~/ scores.length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +45,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
               backgroundColor: AppColor.secondaryLight,
               child: Center(
                 child: Text(
-                  '10',
+                  getAvgScore(widget.scores).toString(),
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -82,7 +94,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       height: 50,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 10,
+                        itemCount: widget.questions.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
@@ -153,12 +165,12 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "This is sample Question here ?",
+                                    widget.questions[selectedIndex],
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    maxLines: 2,
+                                    maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -190,8 +202,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
               color: Colors.white,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (ctx) => InterviewScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => InterviewScreen(
+                            questions: [],
+                          )));
                 },
                 child: Container(
                   height: mq.height * 0.07,

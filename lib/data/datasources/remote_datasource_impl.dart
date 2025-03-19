@@ -13,7 +13,7 @@ class RemoteDatasourceImpl implements RemoteDataSource {
 
   /// Returns the current user's uid if signed in, otherwise null.
   @override
-  Future<String?> getCurrentUid() async => auth.currentUser?.uid;
+  Future<String?> getCurrentUid() async => auth.currentUser!.uid;
 
   /// Returns true if signed in, false if not signed in.
   @override
@@ -46,30 +46,38 @@ class RemoteDatasourceImpl implements RemoteDataSource {
   /// Creates a new user with the given [UserEntity] and returns its uid.
   @override
   Future<void> createUser(UserEntity user) async {
-    final userCollection = db.collection('Users');
+    try {
+      final userCollection = db.collection('Users');
+      final uid = await getCurrentUid();
 
-    final uid = await getCurrentUid();
+      if (uid == null || uid.isEmpty) {
+        print("Error: UID is null or empty");
+        return;
+      }
 
-    userCollection.doc(uid).get().then((newDoc) {
+      final newDoc = await userCollection.doc(uid).get();
+
       final newUser = UserModel(
-        uid: uid!,
-        email: user.email!,
-        username: user.username!,
-        occupation: user.occupation!,
-        interviews: user.interviews!,
-        score: user.score!,
-        techStack: user.techStack!,
-        preferences: user.preferences,
+        uid: uid,
+        email: user.email ?? "",
+        username: user.username ?? "",
+        occupation: user.occupation ?? "",
+        interviews: user.interviews ?? [],
+        score: user.score ?? 0,
+        techStack: user.techStack ?? [],
+        preferences: user.preferences ?? [],
       ).toMap();
 
       if (!newDoc.exists) {
-        userCollection.doc(uid).set(newUser);
+        await userCollection.doc(uid).set(newUser);
+        print("User created successfully!");
       } else {
-        userCollection.doc(uid).update(newUser);
+        await userCollection.doc(uid).update(newUser);
+        print("User updated successfully!");
       }
-    }).catchError((e) {
-      print(e.toString());
-    });
+    } catch (e) {
+      print("Firestore Error: $e");
+    }
   }
 
   /// Signs up user with the given email and password.
@@ -87,22 +95,18 @@ class RemoteDatasourceImpl implements RemoteDataSource {
             await createUser(user);
 
             print("Account Creation Successfull");
+          } else {
+            print("Account Creation Failed");
           }
         });
       }
 
       // return void
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-email') {
-        throw 'The email address is not valid.';
-      } else if (e.code == 'user-not-found') {
-        throw 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        throw 'The password is invalid for the given user.';
-      } else if (e.code == 'email-already-in-use') {
-        throw 'The email address is already in use by another account.';
+      if (e.code == 'email-already-in-use') {
+        print(e.code);
       } else {
-        throw e.code;
+        print('Something went wrong');
       }
     }
   }

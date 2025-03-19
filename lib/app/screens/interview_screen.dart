@@ -4,8 +4,11 @@ import 'package:camera/camera.dart';
 import 'package:mockcrack/app/screens/results_screen.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
+import '../../services/tts_stt_service.dart';
+
 class InterviewScreen extends StatefulWidget {
-  const InterviewScreen({super.key});
+  final List<String> questions;
+  const InterviewScreen({super.key, required this.questions});
 
   @override
   State<InterviewScreen> createState() => _InterviewScreenState();
@@ -17,17 +20,34 @@ class _InterviewScreenState extends State<InterviewScreen> {
   final int totalQuestions = 10;
   int currentQuestion = 1;
   bool isPaused = false;
+  List<int> scores = [];
+  List<String> ans = [];
 
   CameraController? _cameraController;
   bool _isCameraInitialized = false;
   String? _cameraError;
+  AudioService _audioService = AudioService();
 
   @override
   void initState() {
     super.initState();
     startTimer();
     _initializeCamera();
+
+    _speakQuestion();
   }
+
+  void _startListening() async {
+    String result = await _audioService.speechToText();
+    if (result.isNotEmpty) {
+      setState(() {
+        ans.add(result); // Store the recognized text
+      });
+    }
+  }
+
+  void _speakQuestion() async => await _audioService.textToSpeech(
+      "Question $currentQuestion: ${widget.questions[currentQuestion - 1]}");
 
   Future<void> _initializeCamera() async {
     try {
@@ -168,7 +188,7 @@ class _InterviewScreenState extends State<InterviewScreen> {
                   alignment: WrapAlignment.center,
                   spacing: 8,
                   runSpacing: 8,
-                  children: List.generate(totalQuestions, (index) {
+                  children: List.generate(widget.questions.length, (index) {
                     return FilterChip(
                       label: Text('Q${index + 1}'),
                       selected: currentQuestion == index + 1,
@@ -197,10 +217,10 @@ class _InterviewScreenState extends State<InterviewScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    'Q$currentQuestion: Sample question text goes here',
+                    'Q$currentQuestion: ${widget.questions[currentQuestion - 1]}',
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -213,11 +233,24 @@ class _InterviewScreenState extends State<InterviewScreen> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {
-                        if (currentQuestion < totalQuestions) {
+                      onTap: () async {
+                        // Stop listening
+
+                        // If there is recognized text, store it in ans
+                        if (currentQuestion < widget.questions.length) {
+                          // Store the recognized text (if any)
+                          String result = await _audioService.speechToText();
+                          if (result.isNotEmpty) {
+                            setState(() {
+                              ans.add(result); // Store the recognized text
+                            });
+                          }
+
                           currentQuestion++;
+                          _speakQuestion(); // Speak the next question
+                          _startListening(); // Start listening for the next answer
                         } else {
-                          currentQuestion = 1;
+                          print("Interview Completed");
                         }
                       },
                       child: Container(
@@ -284,8 +317,9 @@ class _InterviewScreenState extends State<InterviewScreen> {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => ResultsScreen()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => ResultsScreen(
+                                questions: widget.questions, scores: scores)));
                       },
                       child: Container(
                         height: mq.height * 0.07,

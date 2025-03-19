@@ -44,7 +44,7 @@ class _AppScreenState extends State<AppScreen> {
             HomeScreen(user: user),
             CustomInterviewScreen(),
             InterviewHistoryScreen(),
-            UserProfileScreen(),
+            UserProfileScreen(user: user),
           ];
 
           return Scaffold(

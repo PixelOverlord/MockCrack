@@ -8,6 +8,7 @@ class AppConstants {
   static const String baseUrl = 'https://api.mockcrack.com';
   static const String generateQuestionsEndpoint = '/questions';
   static const String evaluateAnswerEndpoint = '/evaluate';
+  static const String geminiAPI = "AIzaSyCUSf8MelycK7H0g_Saj0GQcahFZdaqS-k";
 
   // SharedPreferences keys
   static const String sessionHistoryKey = 'session_history';
@@ -22,7 +23,8 @@ class AppConstants {
   ];
 
   // AI response for custom interview
-  String customInterviewScreen(
-          String role, String experience, List<String> techstacks) =>
-      "Generate a custom interview for a $role hiring for a $experience level employee with the following technologies: $techstacks. Please structure the interview with each question clearly numbered, starting with '1.', '2.', '3.', and so on. Ensure that each numbered question is on a new line. Generate a mock interview separated by numbers for regex.";
 }
+
+String customInterviewMessage(
+        String role, String experience, List<String> techstacks) =>
+    "Generate a custom interview for a $role hiring for a $experience level employee with the following technologies: $techstacks. Please structure the interview with each question clearly numbered, starting with '1.', '2.', '3.', and so on. Ensure that each numbered question is on a new line. Generate a mock interview separated by numbers for regex. max-Questions limit to 15";

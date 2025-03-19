@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mockcrack/utils/colors.dart';
 
+import '../../domain/entities/users_entity.dart';
+
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  final UserEntity user;
+  const UserProfileScreen({super.key, required this.user});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -38,6 +41,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context).size;
 
+    final user = widget.user;
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: SafeArea(
@@ -71,7 +76,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          userData['name'].toString().substring(0, 1),
+                          user.username!.substring(0, 1),
                           style: const TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
@@ -83,7 +88,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     const SizedBox(height: 16),
                     // Name
                     Text(
-                      userData['name'],
+                      user.username!,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -102,7 +107,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        userData['role'],
+                        user.occupation!,
                         style: const TextStyle(
                           color: Color(0xffb1d580),
                           fontWeight: FontWeight.w500,
@@ -121,13 +126,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   children: [
                     _buildStatCard(
                       'Interviews',
-                      userData['interviews_taken'].toString(),
+                      user.interviews!.length.toString(),
                       Icons.assignment,
                     ),
                     const SizedBox(width: 16),
                     _buildStatCard(
                       'Avg Score',
-                      '${userData['avg_score']}%',
+                      user.score.toString(),
                       Icons.analytics,
                     ),
                   ],
@@ -135,12 +140,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
 
               // Skills Section
+
               _buildSection(
                 'Skills',
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: (userData['skills'] as List<String>).map((skill) {
+                  children: (user.techStack!).map((skill) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -162,11 +168,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ),
 
+              if (user.techStack!.isEmpty)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    margin: EdgeInsets.all(12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF062F29),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Add Skills",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
               // Preferred Roles Section
               _buildSection(
                 'Preferred Roles',
                 Column(
-                  children: (userData['preferred_roles'] as List<String>)
+                  children: (user.preferences!)
                       .map((role) => Container(
                             margin: const EdgeInsets.only(bottom: 8),
                             padding: const EdgeInsets.symmetric(
@@ -205,6 +234,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       .toList(),
                 ),
               ),
+
+              if (user.techStack!.isEmpty)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    margin: EdgeInsets.all(12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color(0xFF062F29),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Add Preferences",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
 
               // Edit Profile Button
               Container(
