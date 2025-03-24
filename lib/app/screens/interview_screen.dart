@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:mockcrack/app/screens/results_screen.dart';
+import 'package:mockcrack/utils/colors.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:path_provider/path_provider.dart';
 
 import '../../services/tts_stt_service.dart';
 
@@ -27,6 +31,8 @@ class _InterviewScreenState extends State<InterviewScreen> {
   bool _isCameraInitialized = false;
   String? _cameraError;
   AudioService _audioService = AudioService();
+  bool _isRecording = false;
+  String? _videoPath;
 
   @override
   void initState() {
@@ -39,9 +45,12 @@ class _InterviewScreenState extends State<InterviewScreen> {
 
   void _startListening() async {
     String result = await _audioService.speechToText();
+    print(result);
     if (result.isNotEmpty) {
       setState(() {
         ans.add(result); // Store the recognized text
+        currentQuestion++;
+        _speakQuestion();
       });
     }
   }
@@ -67,10 +76,11 @@ class _InterviewScreenState extends State<InterviewScreen> {
         return;
       }
 
+      // Use front camera (index 1 usually)
       _cameraController = CameraController(
-        cameras.first,
+        cameras[1], // Changed from cameras.first to cameras[1] for front camera
         ResolutionPreset.medium,
-        enableAudio: false,
+        enableAudio: true, // Changed to true to enable audio recording
       );
 
       try {
@@ -92,6 +102,38 @@ class _InterviewScreenState extends State<InterviewScreen> {
         _cameraError = 'Error accessing camera: $e';
       });
       debugPrint('Error accessing camera: $e');
+    }
+  }
+
+  Future<void> _startRecording() async {
+    if (_cameraController == null || !_isCameraInitialized) return;
+
+    try {
+      final Directory appDocDir = await getApplicationDocumentsDirectory();
+      final String videoPath =
+          '${appDocDir.path}/question_${currentQuestion}.mp4';
+
+      await _cameraController!.startVideoRecording();
+      setState(() {
+        _isRecording = true;
+        _videoPath = videoPath;
+      });
+    } catch (e) {
+      debugPrint('Error starting recording: $e');
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    if (_cameraController == null || !_isCameraInitialized) return;
+
+    try {
+      final XFile file = await _cameraController!.stopVideoRecording();
+      setState(() {
+        _isRecording = false;
+      });
+      debugPrint('Video saved to: ${file.path}');
+    } catch (e) {
+      debugPrint('Error stopping recording: $e');
     }
   }
 
@@ -125,6 +167,7 @@ class _InterviewScreenState extends State<InterviewScreen> {
     final mq = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -160,23 +203,28 @@ class _InterviewScreenState extends State<InterviewScreen> {
               // Camera Feed Container
               Expanded(
                 flex: 3,
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: _isCameraInitialized && _cameraController != null
-                        ? CameraPreview(_cameraController!)
-                        : Center(
-                            child: Text(
-                              _cameraError ?? 'Initializing camera...',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
+                child: Center(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      // width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: _isCameraInitialized && _cameraController != null
+                            ? CameraPreview(_cameraController!)
+                            : Center(
+                                child: Text(
+                                  _cameraError ?? 'Initializing camera...',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -213,18 +261,18 @@ class _InterviewScreenState extends State<InterviewScreen> {
               const SizedBox(height: 20),
 
               // Question Display
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    'Q$currentQuestion: ${widget.questions[currentQuestion - 1]}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+              // Center(
+              //   child: Container(
+              //     padding: const EdgeInsets.all(16),
+              //     child: Text(
+              //       'Q$currentQuestion: ${widget.questions[currentQuestion - 1]}',
+              //       style: const TextStyle(
+              //         fontSize: 20,
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 20),
 
               // Control Buttons
@@ -234,12 +282,17 @@ class _InterviewScreenState extends State<InterviewScreen> {
                   Expanded(
                     child: GestureDetector(
                       onTap: () async {
-                        // Stop listening
+                        // Stop listening and recording
+                        if (_isRecording) {
+                          await _stopRecording();
+                        }
 
                         // If there is recognized text, store it in ans
                         if (currentQuestion < widget.questions.length) {
                           // Store the recognized text (if any)
                           String result = await _audioService.speechToText();
+
+                          print(result);
                           if (result.isNotEmpty) {
                             setState(() {
                               ans.add(result); // Store the recognized text
@@ -248,7 +301,8 @@ class _InterviewScreenState extends State<InterviewScreen> {
 
                           currentQuestion++;
                           _speakQuestion(); // Speak the next question
-                          _startListening(); // Start listening for the next answer
+                          // _startListening(); // Start listening for the next answer
+                          _startRecording(); // Start recording for the next question
                         } else {
                           print("Interview Completed");
                         }
@@ -280,37 +334,19 @@ class _InterviewScreenState extends State<InterviewScreen> {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        // stop timer
+                        // record
 
-                        setState(() {
-                          if (!isPaused) {
-                            isPaused = true;
-                          } else {
-                            isPaused = false;
-                          }
-                        });
+                        _startListening();
                       },
                       child: Container(
                         height: mq.height * 0.07,
                         margin: EdgeInsets.all(mq.height * 0.01),
                         decoration: BoxDecoration(
                           color: Colors.blue,
-                          borderRadius: BorderRadius.circular(16),
+                          // borderRadius: BorderRadius.circular(16),
+                          shape: BoxShape.circle,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              isPaused ? "Resume" : "Pause",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Icon(isPaused ? Icons.play_arrow : Icons.pause,
-                                color: Colors.white, size: 30),
-                          ],
-                        ),
+                        child: Icon(Icons.mic, color: Colors.white, size: 30),
                       ),
                     ),
                   ),

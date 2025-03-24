@@ -6,7 +6,7 @@ class AudioService {
   final FlutterTts _flutterTts = FlutterTts();
   final SpeechToText _speechToText = SpeechToText();
 
-  /// Converts [text] to [audio] and plays it.
+  /// Converts [text] -> [audio] and plays it.
   Future<void> textToSpeech(String text) async {
     await _flutterTts.setLanguage("en-US");
     await _flutterTts.setPitch(1.0);
@@ -14,7 +14,7 @@ class AudioService {
     await _flutterTts.speak(text);
   }
 
-  /// Converts spoken [audio] into [text].
+  /// Converts spoken [audio] -> [text].
   Future<String> speechToText() async {
     // Request permission before starting recognition
     await requestMicrophonePermission();
