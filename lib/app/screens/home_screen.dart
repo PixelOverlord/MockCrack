@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockcrack/app/screens/generating_interview_jobpost.dart';
 import 'package:mockcrack/app/screens/interview_description.dart';
 import 'package:mockcrack/app/widgets/job_card_widget.dart';
 import 'package:mockcrack/domain/entities/users_entity.dart';
@@ -39,6 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
       location: 'USA',
     ),
   ];
+
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         child: TextFormField(
+                          controller: _descriptionController,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Paste Job Description',
@@ -233,31 +237,43 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                       // button
-                      Container(
-                        height: mq.height * 0.07,
-                        width: double.infinity,
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff062f29),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.network(
-                                'https://cdn-icons-png.flaticon.com/512/3324/3324855.png',
-                                height: 25,
-                                width: 25,
-                                color: const Color(0xffb1d580)),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Generate Interview',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xffb1d580)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GeneratingInterviewJobpost(
+                                jobDescription: _descriptionController.text,
+                              ),
                             ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          height: mq.height * 0.07,
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff062f29),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                  'https://cdn-icons-png.flaticon.com/512/3324/3324855.png',
+                                  height: 25,
+                                  width: 25,
+                                  color: const Color(0xffb1d580)),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Generate Interview',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffb1d580)),
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],

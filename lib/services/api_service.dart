@@ -40,6 +40,40 @@ class ApiService {
     }
   }
 
+  Future<List<String>> generateInterviewWithRealJob({
+    required String jobdescription,
+  }) async {
+    final prompt = customInterviewMessageWithRealJob(jobdescription);
+
+    final response = await http.post(
+        Uri.parse(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${AppConstants.geminiAPI}"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "contents": [
+            {
+              "parts": [
+                {"text": prompt}
+              ]
+            }
+          ]
+        }));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final text =
+          data["candidates"]?[0]?["content"]?["parts"]?[0]?["text"] ?? "";
+      print(text);
+      // Extract questions using regex
+      final regex = RegExp(r'\d+\.\s*(.*)');
+      final matches = regex.allMatches(text);
+      return matches.map((match) => match.group(1)!.trim()).toList();
+    } else {
+      throw Exception(
+          "Failed to generate interview questions: ${response.body}");
+    }
+  }
+
   // evaluate answer
 
   Future<Answer> evaluateScore(String question, String answer) async {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:mockcrack/app/screens/results_screen.dart';
+import 'package:mockcrack/services/api_service.dart';
 import 'package:mockcrack/utils/colors.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:path_provider/path_provider.dart';
@@ -19,20 +20,24 @@ class InterviewScreen extends StatefulWidget {
 }
 
 class _InterviewScreenState extends State<InterviewScreen> {
+  /// [timer] services
   late Timer _timer;
   Duration _elapsedTime = Duration.zero;
+
+  /// [questions] services
   final int totalQuestions = 10;
   int currentQuestion = 1;
-  bool isPaused = false;
   List<int> scores = [];
   List<String> ans = [];
+  List<Answer> answers = [];
 
+  /// [camera] services
   CameraController? _cameraController;
   bool _isCameraInitialized = false;
   String? _cameraError;
-  AudioService _audioService = AudioService();
+  final AudioService _audioService = AudioService();
+  final ApiService _service = ApiService();
   bool _isRecording = false;
-  String? _videoPath;
 
   @override
   void initState() {
@@ -40,15 +45,23 @@ class _InterviewScreenState extends State<InterviewScreen> {
     startTimer();
     _initializeCamera();
 
-    _speakQuestion();
+    _speakQuestion(); // speak up first [Question]
   }
 
   void _startListening() async {
     String result = await _audioService.speechToText();
     print(result);
     if (result.isNotEmpty) {
+      final answer =
+          await _evaluateAnswer(widget.questions[currentQuestion - 1], result);
+
+      print(
+          "Answer: {${answer.answer} , ${answer.score} , ${answer.accuracy}}");
+
+      answers.add(answer);
       setState(() {
         ans.add(result); // Store the recognized text
+        scores.add(answer.score);
         currentQuestion++;
         _speakQuestion();
       });
@@ -57,6 +70,9 @@ class _InterviewScreenState extends State<InterviewScreen> {
 
   void _speakQuestion() async => await _audioService.textToSpeech(
       "Question $currentQuestion: ${widget.questions[currentQuestion - 1]}");
+
+  Future<Answer> _evaluateAnswer(String question, String answer) async =>
+      await _service.evaluateScore(question, answer);
 
   Future<void> _initializeCamera() async {
     try {
@@ -109,14 +125,9 @@ class _InterviewScreenState extends State<InterviewScreen> {
     if (_cameraController == null || !_isCameraInitialized) return;
 
     try {
-      final Directory appDocDir = await getApplicationDocumentsDirectory();
-      final String videoPath =
-          '${appDocDir.path}/question_${currentQuestion}.mp4';
-
       await _cameraController!.startVideoRecording();
       setState(() {
         _isRecording = true;
-        _videoPath = videoPath;
       });
     } catch (e) {
       debugPrint('Error starting recording: $e');
@@ -139,19 +150,10 @@ class _InterviewScreenState extends State<InterviewScreen> {
 
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isPaused) {
-        setState(() {
-          _elapsedTime += const Duration(seconds: 1);
-        });
-      }
+      setState(() {
+        _elapsedTime += const Duration(seconds: 1);
+      });
     });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _cameraController?.dispose();
-    super.dispose();
   }
 
   String _formatDuration(Duration duration) {
@@ -160,6 +162,13 @@ class _InterviewScreenState extends State<InterviewScreen> {
     String minutes = twoDigits(duration.inMinutes.remainder(60));
     String seconds = twoDigits(duration.inSeconds.remainder(60));
     return "$hours:$minutes:$seconds";
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _cameraController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -355,7 +364,8 @@ class _InterviewScreenState extends State<InterviewScreen> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => ResultsScreen(
-                                questions: widget.questions, scores: scores)));
+                                questions: widget.questions,
+                                answers: answers)));
                       },
                       child: Container(
                         height: mq.height * 0.07,

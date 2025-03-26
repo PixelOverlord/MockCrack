@@ -28,3 +28,6 @@ class AppConstants {
 String customInterviewMessage(
         String role, String experience, List<String> techstacks) =>
     "Generate a custom interview for a $role hiring for a $experience level employee with the following technologies: $techstacks. Please structure the interview with each question clearly numbered, starting with '1.', '2.', '3.', and so on. Ensure that each numbered question is on a new line. Generate a mock interview separated by numbers for regex. max-Questions limit to 15";
+
+String customInterviewMessageWithRealJob(String jobdescription) =>
+    "Generate a custom interview for a $jobdescription. Please structure the interview with each question clearly numbered, starting with '1.', '2.', '3.', and so on. Ensure that each numbered question is on a new line. Generate a mock interview separated by numbers for regex. max-Questions limit to 15";
